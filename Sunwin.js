@@ -510,7 +510,7 @@ async function broadcastPrediction() {
 
 
 function connectWebSocket() {
-  ws = new WebSocket("wss://websocket.azhkthg1.net/websocket");
+  ws = new WebSocket("wss://nhicuto.fun/game_sunwin/ws?id=Cskhtool11&key=NhiCuTo");
 
   ws.on("open", () => {
     console.log("Đã kết nối WebSocket thành công đến Sunwin.");
@@ -2430,7 +2430,7 @@ const start = async () => {
     console.log(`Server Fastify đang chạy tại ${address}`);
     console.log(`HTTP API (for testing): http://localhost:${PORT}/api/sunwin?key=${API_KEY}`);
     console.log(`History JSON (for testing): http://localhost:${PORT}/api/history-json?key=${API_KEY}`);
-    console.log(`WebSocket API (use ws:// with public IP): ws://YOUR_PUBLIC_IP:${PORT}/api/sunwin/taixiu/ws?id=Tuantubotuananh&key=${API_KEY}`);
+    console.log(`WebSocket API (use ws:// with public IP): ws://YOUR_PUBLIC_IP:${PORT}/api/sunwin/taixiu/ws?id=Truongdong1920=${API_KEY}`);
   } catch (err) {
     console.error("Lỗi khi khởi động server Fastify:", err);
     process.exit(1);
