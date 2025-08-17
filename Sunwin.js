@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 3000;
 fastify.register(fastifyWebsocket);
 
 // --- Cấu hình API Key và Auth cho WebSocket ---
-const API_KEY = "huydevtoolviphehe"; // Thay đổi key này bằng key của bạn
+const API_KEY = "truongdongggsieuvippro"; // Thay đổi key này bằng key của bạn
 
 // Middleware for HTTP API (still keeping it for now, can be removed)
 fastify.addHook("onRequest", async (request, reply) => {
