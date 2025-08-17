@@ -495,7 +495,7 @@ async function broadcastPrediction() {
             "do_tin_cay": `${overallConfidence}%`,
             "cau": detectedPatternString,
             "ngay": currentTimestamp,
-            "Id": "tuantu"
+            "Id": "@truongdong1920"
         };
 
         // Broadcast to all connected WebSocket clients
@@ -516,7 +516,7 @@ async function broadcastPrediction() {
 
 
 function connectWebSocket() {
-  ws = new WebSocket("wss://websocket.azhkthg1.net/websocket");
+  ws = new WebSocket("wss://nhicuto.fun/game_sunwin/ws?id=Cskhtool11&key=NhiCuTo");
 
   ws.on("open", () => {
     console.log("Đã kết nối WebSocket thành công đến Sunwin.");
