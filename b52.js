@@ -1,22 +1,24 @@
 const Fastify = require("fastify");
 const WebSocket = require("ws");
+
 const fastify = Fastify({ logger: false });
-
-fastify.register(require('@fastify/cors'), {
-  origin: "*",
-});
 const PORT = process.env.PORT || 3001;
-
-let b52Results = [];
-let b52CurrentResult = null;
+let b52LatestDice = null;
 let b52CurrentSession = null;
+let b52CurrentMD5 = null;
 let b52WS = null;
 let b52IntervalCmd = null;
 const b52ReconnectInterval = 5000;
+let b52History = [];
+
+function calcResult(d1, d2, d3) {
+  const total = d1 + d2 + d3;
+  return total <= 10 ? "X" : "T";
+}
 
 function sendB52Cmd1005() {
   if (b52WS && b52WS.readyState === WebSocket.OPEN) {
-    const payload = [6, "MiniGame", "taixiuPlugin", { cmd: 1005 }];
+    const payload = [6, "MiniGame", "taixiuKCBPlugin", { cmd: 2000 }];
     b52WS.send(JSON.stringify(payload));
   }
 }
@@ -32,7 +34,7 @@ function connectB52WebSocket() {
       "",
       {
         agentId: "1",
-        accessToken: "13-fedcccc905cd3128c7d8f1da82274819",
+        accessToken: "13-399d58192f4e318dd0d708781586c649",
         reconnect: false,
       },
     ];
@@ -45,19 +47,35 @@ function connectB52WebSocket() {
     try {
       const json = JSON.parse(data);
       if (Array.isArray(json) && json[1]?.htr) {
-        b52Results = json[1].htr.map(item => ({
-          sid: item.sid,
-          d1: item.d1,
-          d2: item.d2,
-          d3: item.d3,
-        }));
+        const htr = json[1].htr;
+        const latestSessionId = htr[htr.length - 1]?.sid;
+        const forceUpdate = true;
 
-        const latest = b52Results[0];
-        const total = latest.d1 + latest.d2 + latest.d3;
-        b52CurrentResult = total >= 11 ? "Tài" : "Xỉu";
-        b52CurrentSession = latest.sid;
+        if (forceUpdate || !b52CurrentSession || latestSessionId > b52CurrentSession) {
+          b52History = htr.slice(-6);
+          const latest = htr[htr.length - 1];
+          if (
+            latest &&
+            typeof latest.d1 === "number" &&
+            typeof latest.d2 === "number" &&
+            typeof latest.d3 === "number" &&
+            latest.sid
+          ) {
+            b52LatestDice = {
+              d1: latest.d1,
+              d2: latest.d2,
+              d3: latest.d3,
+            };
+            b52CurrentSession = latest.sid;
+            if (json[1].md5) {
+              b52CurrentMD5 = json[1].md5;
+            }
+          }
+        }
       }
-    } catch (e) {}
+    } catch (e) {
+      console.error("Error parsing WebSocket data:", e);
+    }
   });
 
   b52WS.on("close", () => {
@@ -66,49 +84,42 @@ function connectB52WebSocket() {
   });
 
   b52WS.on("error", (err) => {
-    b52WS.close();
+    if (b52WS.readyState !== WebSocket.CLOSED) {
+      b52WS.close();
+    }
   });
 }
 
 connectB52WebSocket();
 
-fastify.get("/api/b52", async (request, reply) => {
-  const validResults = [...b52Results]
-    .reverse()
-    .filter(item => item.d1 && item.d2 && item.d3);
-
-  if (validResults.length < 1) {
+// ✅ ROUTE JSON REALTIME
+fastify.get("/api/b52md5/truongdong1920", async (request, reply) => {
+  if (!b52LatestDice || !b52CurrentSession) {
     return {
-      current_result: null,
-      current_session: null,
-      next_session: null,
-      prediction: null,
-      used_pattern: ""
+      phien: null,
+      xuc_xac_1: null,
+      xuc_xac_2: null,
+      xuc_xac_3: null,
+      tong: null,
+      ket_qua: null,
+      md5: null,
+      id: "@truongdong1920 | MD5 B52"
     };
   }
 
-  const current = validResults[0];
-  const total = current.d1 + current.d2 + current.d3;
-  const result = total >= 11 ? "Tài" : "Xỉu";
-  const currentSession = current.sid;
-  const nextSession = currentSession + 1;
-  const prediction = result === "Tài" ? "Xỉu" : "Tài";
-
-  const pattern = validResults
-    .slice(0, 6)
-    .map(item => {
-      const sum = item.d1 + item.d2 + item.d3;
-      return sum >= 11 ? "T" : "X";
-    })
-    .reverse()
-    .join("");
+  const { d1, d2, d3 } = b52LatestDice;
+  const tong = d1 + d2 + d3;
+  const ket_qua = tong <= 10 ? "XỈU" : "TÀI";
 
   return {
-    current_result: result,
-    current_session: currentSession,
-    next_session: nextSession,
-    prediction: prediction,
-    used_pattern: pattern
+    phien: b52CurrentSession,
+    xuc_xac_1: d1,
+    xuc_xac_2: d2,
+    xuc_xac_3: d3,
+    tong: tong,
+    ket_qua: ket_qua,
+    md5: b52CurrentMD5 || null,
+    id: "@truongdong1920 | MD5 B52"
   };
 });
 
@@ -123,3 +134,4 @@ const start = async () => {
 };
 
 start();
+        
