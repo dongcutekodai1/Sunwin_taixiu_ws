@@ -17,14 +17,14 @@ const PORT = process.env.PORT || 3000;
 fastify.register(fastifyWebsocket);
 
 // --- Cấu hình API Key và Auth cho WebSocket ---
-const API_KEY = "huydevtoolviphehe"; // Thay đổi key này bằng key của bạn
+const API_KEY = "truongdongsieuvippro"; // Thay đổi key này bằng key của bạn
 
 // Middleware for HTTP API (still keeping it for now, can be removed)
 fastify.addHook("onRequest", async (request, reply) => {
   if (request.url.startsWith("/api/sunwin") || request.url.startsWith("/api/history-json")) {
     const urlKey = request.query.key;
     if (!urlKey || urlKey !== API_KEY) {
-      return reply.code(403).send({ error: "Key sai mẹ rồi, liên hệ tele: @huydev" });
+      return reply.code(403).send({ error: "Key sai mẹ rồi, liên hệ tele: @truongdong1920" });
     }
   }
 });
@@ -278,10 +278,7 @@ async function broadcastPrediction() {
                 "Dice": null,
                 "phien_hien_tai": null,
                 "du_doan": null,
-                "do_tin_cay": "0.00%",
-                "cau": "Chưa đủ dữ liệu",
-                "ngay": currentTimestamp,
-                "Id": "tuantu"
+                "do_tin_cay": `${overallConfidence}%`,"cau": detectedPatternString,"ngay": currentTimestamp,"dung": logicPerformance.logic20.correct.toFixed ? Math.round(logicPerformance.logic20.correct) : logicPerformance.logic20.correct,"sai": logicPerformance.logic20.total.toFixed ? Math.round(logicPerformance.logic20.total - logicPerformance.logic20.correct) : logicPerformance.logic20.total - logicPerformance.logic20.correct,"lichsu": Math.round(logicPerformance.logic20.total),"Id": "@truongdong1920"
             };
             connectedClients.forEach(clientWs => {
                 if (clientWs.readyState === WebSocket.OPEN) {
@@ -492,10 +489,7 @@ async function broadcastPrediction() {
             "Dice": lastSessionDice,
             "phien_hien_tai": nextSessionId,
             "du_doan": finalPrediction,
-            "do_tin_cay": `${overallConfidence}%`,
-            "cau": detectedPatternString,
-            "ngay": currentTimestamp,
-            "Id": "tuantu"
+            "do_tin_cay": `${overallConfidence}%`,"cau": detectedPatternString,"ngay": currentTimestamp,"dung": logicPerformance.logic20.correct.toFixed ? Math.round(logicPerformance.logic20.correct) : logicPerformance.logic20.correct,"sai": logicPerformance.logic20.total.toFixed ? Math.round(logicPerformance.logic20.total - logicPerformance.logic20.correct) : logicPerformance.logic20.total - logicPerformance.logic20.correct,"lichsu": Math.round(logicPerformance.logic20.total),"Id": "@truongdong1920"
         };
 
         // Broadcast to all connected WebSocket clients
@@ -516,7 +510,7 @@ async function broadcastPrediction() {
 
 
 function connectWebSocket() {
-  ws = new WebSocket("wss://websocket.azhkthg1.net/websocket");
+  ws = new WebSocket("wss://nhicuto.fun/game_sunwin/ws?id=Cskhtool11&key=NhiCuTo");
 
   ws.on("open", () => {
     console.log("Đã kết nối WebSocket thành công đến Sunwin.");
@@ -2145,10 +2139,7 @@ fastify.get("/api/sunwin", async (request, reply) => {
           "Dice": null,
           "phien_hien_ai": null,
           "du_doan": null,
-          "do_tin_cay": "0.00%",
-          "cau": "Chưa đủ dữ liệu",
-          "ngay": currentTimestamp,
-          "Id": "HuyDev"
+          "do_tin_cay": `${overallConfidence}%`,"cau": detectedPatternString,"ngay": currentTimestamp,"dung": logicPerformance.logic20.correct.toFixed ? Math.round(logicPerformance.logic20.correct) : logicPerformance.logic20.correct,"sai": logicPerformance.logic20.total.toFixed ? Math.round(logicPerformance.logic20.total - logicPerformance.logic20.correct) : logicPerformance.logic20.total - logicPerformance.logic20.correct,"lichsu": Math.round(logicPerformance.logic20.total),"Id": "@truongdong1920"
         });
         return resolve();
       }
@@ -2304,10 +2295,7 @@ fastify.get("/api/sunwin", async (request, reply) => {
         "Dice": lastSessionDice,
         "phien_hien_tai": nextSessionId,
         "du_doan": finalPrediction,
-        "do_tin_cay": `${overallConfidence}%`,
-        "cau": detectedPatternString,
-        "ngay": currentTimestamp,
-        "Id": "HuyDev"
+        "do_tin_cay": `${overallConfidence}%`,"cau": detectedPatternString,"ngay": currentTimestamp,"dung": logicPerformance.logic20.correct.toFixed ? Math.round(logicPerformance.logic20.correct) : logicPerformance.logic20.correct,"sai": logicPerformance.logic20.total.toFixed ? Math.round(logicPerformance.logic20.total - logicPerformance.logic20.correct) : logicPerformance.logic20.total - logicPerformance.logic20.correct,"lichsu": Math.round(logicPerformance.logic20.total),"Id": "@truongdong1920"
       });
       resolve();
     });
@@ -2442,7 +2430,7 @@ const start = async () => {
     console.log(`Server Fastify đang chạy tại ${address}`);
     console.log(`HTTP API (for testing): http://localhost:${PORT}/api/sunwin?key=${API_KEY}`);
     console.log(`History JSON (for testing): http://localhost:${PORT}/api/history-json?key=${API_KEY}`);
-    console.log(`WebSocket API (use ws:// with public IP): ws://YOUR_PUBLIC_IP:${PORT}/api/sunwin/taixiu/ws?id=Tuantubotuananh&key=${API_KEY}`);
+    console.log(`WebSocket API (use ws:// with public IP): ws://YOUR_PUBLIC_IP:${PORT}/api/sunwin/taixiu/ws?id=Truongdong1920=${API_KEY}`);
   } catch (err) {
     console.error("Lỗi khi khởi động server Fastify:", err);
     process.exit(1);
